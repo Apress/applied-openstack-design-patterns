@@ -1,0 +1,21 @@
+heat_template_version: 
+description: 
+parameters:
+  param1
+    type: 
+    label: 
+    description:
+    default: 
+  param2:
+     ....
+resources:
+ resource_name:
+    type: OS::*::*
+    properties:
+      prop1: { get_param: param1}
+      prop2: { get_param: param2}
+      .......
+outputs:
+  output1:
+    description: 
+    value: { get_attr: resource_name,attr] }

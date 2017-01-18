@@ -1,0 +1,16 @@
+name "os-object-storage"
+description "Swift Roles"
+run_list(
+  "role[os-base]",
+  "role[os-object-storage-account]",
+  "role[os-object-storage-container]",
+  "role[os-object-storage-management]",
+  "role[os-object-storage-object]"
+  )
+Even more, a Swift proxy role can look like following:
+name "os-object-storage-proxy"
+description "Swift Proxy Role"
+run_list(
+  "role[os-base]",
+  "recipe[openstack-object-storage::proxy-server]"
+  )

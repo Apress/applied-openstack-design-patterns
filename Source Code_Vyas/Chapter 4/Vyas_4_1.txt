@@ -1,0 +1,53 @@
+listen glance_api_cluster
+	bind *:9292
+	balance  source
+	option  tcpka
+	option  httpchk
+	option  tcplog
+	server controller1 10.1.1.11:9292 check inter 2000 rise 2 fall 5
+	server controller2 10.1.1.12:9292 check inter 2000 rise 2 fall 5
+listen glance_registry_cluster
+	bind *:9191
+	balance  source
+	option  tcpka
+	option  tcplog
+	server controller1 192.168.1.11:9191 check inter 2000 rise 2 fall 5
+	server controller2 192.168.1.12:9191 check inter 2000 rise 2 fall 5
+listen keystone_admin_cluster
+	bind *:35357
+	balance  source
+	option  tcpka
+	option  httpchk
+	option  tcplog
+	server controller1 10.1.1.11:35357 check inter 2000 rise 2 fall 5
+	server controller2 10.1.1.12:35357 check inter 2000 rise 2 fall 5
+listen keystone_public_internal_cluster
+	bind *:5000
+	balance  source
+	option  tcpka
+	option  httpchk
+	option  tcplog
+	server controller1 10.1.1.11:5000 check inter 2000 rise 2 fall 5
+	server controller2 10.1.1.12:5000 check inter 2000 rise 2 fall 5
+listen nova_ec2_api_cluster
+	bind *:8773
+	balance  source
+	option  tcpka
+	option  tcplog
+	server controller1 10.1.1.11:8773 check inter 2000 rise 2 fall 5
+	server controller2 10.1.1.12:8773 check inter 2000 rise 2 fall 5
+listen nova_compute_api_cluster
+	bind *:8774
+	balance  source
+	option  tcpka
+	option  httpchk
+	option  tcplog
+	server controller1 10.1.1.11:8774 check inter 2000 rise 2 fall 5
+	server controller2 10.1.1.12:8774 check inter 2000 rise 2 fall 5
+listen nova_metadata_api_cluster
+	bind *:8775
+	balance  source
+	option  tcpka
+	option  tcplog
+	server controller1 10.1.1.11:8775 check inter 2000 rise 2 fall 5
+	server controller2 10.1.1.12:8775 check inter 2000 rise 2 fall 5

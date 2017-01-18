@@ -1,0 +1,28 @@
+[DEFAULT]
+...
+my_ip=192.168.210.21
+vncserver_listen=0.0.0.0
+vncserver_proxyclient_address=10.1.1.21
+glance_host=controller
+network_manager=nova.network.manager.FlatDHCPManager
+firewall_driver=nova.virt.libvirt.firewall.IptablesFirewallDriver
+network_size=254
+allow_same_net_traffic=False
+multi_host=True
+send_arp_for_ha=True
+share_dhcp_address=True
+force_dhcp_release=True
+flat_network_bridge=br100
+flat_interface=eth1
+public_interface=eth1
+rabbit_hosts = controller1:5672,controller2:5672
+rabbit_retry_interval = 1
+rabbit_retry_backoff = 2
+rabbit_max_retries = 0
+rabbit_durable_queues = False
+rabbit_ha_queues = True
+rabbit_password = guest
+auth_strategy = keystone
+irpc_backend = nova.rpc.impl_kombu
+[database]
+connection = mysql://nova:yournovapassword@mysql:33306/nova

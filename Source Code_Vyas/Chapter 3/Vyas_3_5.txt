@@ -1,0 +1,66 @@
+Vagrant.require_version ">= 1.1"
+
+Vagrant.configure("2") do |config|
+   # Omnibus plugin configuration
+  config.omnibus.chef_version = :latest
+
+  # OpenStack settings
+  chef_environment = "vagrant"
+
+    controller_run_list = [
+      "role[os-base-controller]",
+      "recipe[openstack-network::identity_registration]",
+      "role[os-network-openvswitch]",
+      "role[os-network-dhcp-agent]",
+      "role[os-network-metadata-agent]",
+      "role[os-network-server]"
+    ]
+
+  # virtualbox provider settings
+  config.vm.provider "virtualbox" do |vb|
+    vb.customize ["modifyvm", :id, "--cpus", 4]
+    vb.customize ["modifyvm", :id, "--memory", 4096]
+    vb.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
+    vb.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]
+  end
+
+  # OpenStack Controller 
+ 
+  config.vm.define :controller1 do |controller1|
+    controller1.vm.hostname = "controller1"
+    controller1.vm.box = "opscode-centos-6.5"
+    controller1.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_centos-6.5_chef-provisionerless.box"
+
+    controller1.vm.network "forwarded_port", guest: 443, host: 9443     # forward to dashboard using ssl : dashboard-ssl
+    controller1.vm.network "forwarded_port", guest: 8773, host: 9773    # forward to EC2 api : compute-ec2-api
+    controller1.vm.network "forwarded_port", guest: 8774, host: 9774    # forward to Compute API : compute-api
+    controller1.vm.network "private_network", ip: "192.168.47.10" 
+    controller1.vm.network "private_network", ip: "172.16.11.10"  
+
+    controller1.vm.provision :chef_client do |chef|
+      chef.run_list = controller_run_list
+      chef.environment = chef_environment
+      # Where to find our Chef Server by providing the authorization key
+      chef.chef_server_url = "https://chef.apress.com:443"
+     chef.validation_key_path = "/home/apress/chef-repo/.chef/chef-validator.pem"
+    end
+  end
+
+ # OpenStack Compute 
+
+  config.vm.define :compute1 do |apress1|
+    compute1.vm.hostname = "apress"
+    compute1.vm.box = "opscode-centos-6.5"
+    compute1.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_centos-6.5_chef-provisionerless.box"
+    compute1.vm.network "private_network", ip: "192.168.19.80"
+    compute1.vm.network "private_network", ip: "152.11.24.85"
+
+    compute1.vm.provision :chef_client do |chef|
+      chef.run_list = [ "role[os-compute-worker]" ]
+      chef.environment = chef_environment
+     # Where to find our Chef Server by providing the authorization key
+      chef.chef_server_url = "https://chef.apress.com:443"
+     chef.validation_key_path = "/home/apress/chef-repo/.chef/chef-validator.pem"
+    end
+  end 
+end

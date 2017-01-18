@@ -1,0 +1,19 @@
+os-base.json
+{
+  "name": "os-base.json",
+  "description": "OpenStack Base Role",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+  },
+  "override_attributes": {
+  },
+  "chef_type": "role",
+  "run_list": [
+    "recipe[openstack-common]",
+    "recipe[openstack-common::logging]",
+    "recipe[openstack-common::set_endpoints_by_interface]",
+    "recipe[openstack-common::sysctl]"
+  ],
+  "env_run_lists": {
+  }
+}

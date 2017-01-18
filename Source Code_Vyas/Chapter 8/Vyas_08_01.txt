@@ -1,0 +1,38 @@
+log         127.0.0.1 local2
+  chroot      /var/lib/haproxy
+  pidfile     /var/run/haproxy.pid
+  maxconn     1020   # See also: ulimit -n
+  user        haproxy
+  group       haproxy
+  daemon
+  stats socket /var/lib/haproxy/stats.sock mode 600 level admin
+  stats timeout 2m
+defaults
+  mode    tcp
+  log     global
+  option  dontlognull
+  option  redispatch
+  retries                   3
+  timeout queue             45s
+  timeout connect           5s
+  timeout client            1m
+  timeout server            1m
+  timeout check             10s
+  maxconn                   1020
+listen haproxy-monitoring *:80
+  mode    tcp
+  stats   enable
+  stats   show-legends
+  stats   refresh           5s
+  stats   uri               /
+  stats   realm             Haproxy\ Statistics
+  stats   auth              monitor:packadmin
+  stats   admin             if TRUE
+frontend haproxy1   # modify on 2nd HAProxy system
+  bind    *:3306
+  default_backend           mysql-os-cluster
+backend mysql-os-cluster
+  balance roundrobin
+  server  mysql01            10.10.10.18:3306 maxconn 151 check
+  server  mysql02            10.10.10.19:3306 maxconn 151 check
+  server  mysql03            10.10.10.20:3306 maxconn 151 check

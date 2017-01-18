@@ -1,0 +1,17 @@
+vrrp_script chk_haproxy {
+  script   "killall -0 haproxy"
+  interval 2
+  weight   2
+}
+vrrp_instance MYSQL_VIP {
+  interface         eth0
+  virtual_router_id 120
+  priority          111   # Second HAProxy will be 110
+  advert_int        1
+  virtual_ipaddress {
+    10.10.10.15/32 dev eth0
+  }
+  track_script {
+    chk_haproxy
+  }
+}
