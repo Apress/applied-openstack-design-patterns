@@ -1,6 +1,6 @@
 #Apress Source Code
 
-This repository accompanies [*Applied OpenStack Design Patterns*](http://www.apress.com/9781484224533) by Vyas, Uchit (Apress, 2016).
+This repository accompanies [*Applied OpenStack Design Patterns*](http://www.apress.com/9781484224533) by Uchit Vyas (Apress, 2016).
 
 ![Cover image](9781484224533.jpg)
 
